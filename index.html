@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psych sheet: Alex y Marcos en España y Portugal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9;--card:#fff;--ink:#16181d;--muted:#667085;--line:#e4e7ec;
+  --a:#2563eb;--a-soft:#e8efff;--m:#c2410c;--m-soft:#fdeee5;
+  --gold:#d4a017;--silver:#9aa3ad;--bronze:#b8733a;--ok:#15803d;--ok-soft:#e7f6ec;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1115;--card:#171a20;--ink:#eceef2;--muted:#98a2b3;--line:#262b33;
+  --a:#7aa2ff;--a-soft:#1b2540;--m:#fb923c;--m-soft:#3a2214;--ok:#4ade80;--ok-soft:#14301f;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 20px}
+.who{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.chip.a{background:var(--a-soft);color:var(--a)} .chip.m{background:var(--m-soft);color:var(--m)}
+.chip a{color:inherit;font-weight:500;opacity:.8}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:22px;position:sticky;top:0;z-index:5}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.controls label{display:inline-flex;gap:6px;align-items:center;font-size:13px;cursor:pointer}
+.lbl{font-size:12px;color:var(--muted);margin-right:4px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat h3{margin:0 0 8px;font-size:13px}
+.stat .big{font-size:24px;font-weight:700}
+.stat .small{color:var(--muted);font-size:12px}
+.comp{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden}
+.ch{padding:14px 16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.ch h2{margin:0;font-size:17px}
+.ch h2 a{color:inherit;text-decoration:none} .ch h2 a:hover{text-decoration:underline}
+.meta{color:var(--muted);font-size:12.5px;margin-top:3px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start}
+.tag{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.tag.reg{background:var(--ok-soft);color:var(--ok)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+th.a{color:var(--a)} th.m{color:var(--m)}
+td.n{color:var(--muted);font-variant-numeric:tabular-nums}
+.cell{display:flex;align-items:baseline;gap:10px}
+.rank{font:600 15px/1 Inter;min-width:62px;font-variant-numeric:tabular-nums}
+.rank small{color:var(--muted);font-weight:500;font-size:12px}
+.pb{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.none{color:var(--muted);font-size:12.5px}
+.medal{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.g{background:var(--gold)}.s{background:var(--silver)}.b{background:var(--bronze)}
+.notreg{opacity:.45}
+.regmark{font-size:10.5px;font-weight:700;color:var(--ok);margin-left:6px}
+.foot{color:var(--muted);font-size:12px;margin-top:28px;line-height:1.6}
+.empty{padding:14px 16px;color:var(--muted)}
+@media (max-width:640px){th,td{padding:7px 8px}.pb{display:none}.rank{min-width:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>¿En qué puesto quedarían?</h1>
+  <p class="sub">Puestos en la psych sheet de cada competición WCA próxima de España y Portugal, calculados con los récords personales de cada uno.</p>
+  <div class="who" id="who"></div>
+
+  <div class="controls">
+    <span><span class="lbl">País</span><span class="seg" id="fCountry">
+      <button data-v="all" class="on">Todos</button><button data-v="ES">España</button><button data-v="PT">Portugal</button></span></span>
+    <span><span class="lbl">Cálculo</span><span class="seg" id="fMode">
+      <button data-v="solo" class="on">Cada uno por separado</button><button data-v="both">Los dos inscritos</button></span></span>
+    <label><input type="checkbox" id="fOnly" checked> Solo pruebas con resultado</label>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="list"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const DATA = {"generated": "2026-11-20", "people": {"2025MORA11": {"name": "Alex Mora"}, "2025PRIE04": {"name": "Marcos Mora Prieto"}}, "comps": [{"id": "GelvesOpen2026", "name": "Gelves Open 2026", "city": "Gelves, Sevilla", "country": "ES", "start": "2026-11-21", "end": "2026-11-22", "limit": 64, "reg_open": "2026-09-15T18:00:00.000Z", "reg_close": "2026-11-15T22:59:00.000Z", "accepted": 55, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 53, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 13, "both": 13}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 30, "both": 31}}}, {"id": "222", "n": 48, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 14, "both": 14}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 24, "both": 25}}}, {"id": "444", "n": 28, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 18, "both": 18}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 24, "both": 25}}}, {"id": "555", "n": 24, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 12, "both": 12}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "666", "n": 17, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "777", "n": 15, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 15, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 12, "both": 12}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "pyram", "n": 42, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 12, "both": 13}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 9, "both": 9}}}, {"id": "skewb", "n": 32, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 12, "both": 13}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 12, "both": 12}}}, {"id": "sq1", "n": 20, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 13, "both": 13}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "LElianaOpen2026", "name": "L'Eliana Open 2026", "city": "L'Eliana, Valencia", "country": "ES", "start": "2026-11-21", "end": "2026-11-22", "limit": 60, "reg_open": "2026-10-13T16:00:00.000Z", "reg_close": "2026-11-15T22:59:00.000Z", "accepted": 60, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 59, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 9, "both": 9}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 35, "both": 36}}}, {"id": "222", "n": 52, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 11, "both": 11}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 28, "both": 29}}}, {"id": "444", "n": 37, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 13, "both": 13}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 30, "both": 31}}}, {"id": "333bf", "n": 13, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 29, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 2, "both": 3}}}, {"id": "minx", "n": 25, "p": {"2025MORA11": {"avg": 5586, "single": 4826, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": 18636, "has": true, "solo": 18, "both": 19}}}, {"id": "pyram", "n": 44, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 10, "both": 11}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 10, "both": 10}}}, {"id": "skewb", "n": 35, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 9, "both": 10}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 9, "both": 9}}}]}, {"id": "UrnietaMentalBreakdown2026", "name": "Urnieta Mental Breakdown 2026", "city": "Urnieta, Gipuzkoa", "country": "ES", "start": "2026-11-21", "end": "2026-11-21", "limit": 20, "reg_open": "2026-09-23T18:00:00.000Z", "reg_close": "2026-11-16T18:00:00.000Z", "accepted": 11, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333bf", "n": 11, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 10, "both": 10}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333fm", "n": 6, "p": {"2025MORA11": {"avg": 4700, "single": 42, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "444bf", "n": 7, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "555bf", "n": 4, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333mbf", "n": 6, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "LisboaChampionship2026", "name": "DataVexa Lisboa Championship 2026", "city": "Amadora, Lisboa", "country": "PT", "start": "2026-11-21", "end": "2026-11-22", "limit": 80, "reg_open": "2026-10-25T19:00:00.000Z", "reg_close": "2026-11-13T21:00:00.000Z", "accepted": 52, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 52, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 15, "both": 15}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 33, "both": 34}}}, {"id": "222", "n": 44, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 14, "both": 14}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 28, "both": 29}}}, {"id": "444", "n": 35, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 19, "both": 19}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 30, "both": 31}}}, {"id": "555", "n": 20, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 14, "both": 14}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "666", "n": 15, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "777", "n": 15, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 14, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 12, "both": 12}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333oh", "n": 27, "p": {"2025MORA11": {"avg": 2374, "single": 1997, "has": true, "solo": 16, "both": 16}, "2025PRIE04": {"avg": 5217, "single": 4135, "has": true, "solo": 23, "both": 24}}}, {"id": "clock", "n": 27, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 3, "both": 4}}}, {"id": "minx", "n": 21, "p": {"2025MORA11": {"avg": 5586, "single": 4826, "has": true, "solo": 4, "both": 4}, "2025PRIE04": {"avg": null, "single": 18636, "has": true, "solo": 18, "both": 19}}}, {"id": "pyram", "n": 39, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 11, "both": 12}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 9, "both": 9}}}, {"id": "skewb", "n": 29, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 9, "both": 10}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 9, "both": 9}}}, {"id": "sq1", "n": 19, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 12, "both": 12}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "SpanishChampionship2026", "name": "Spanish Championship 2026", "city": "Barakaldo, Bizkaia", "country": "ES", "start": "2026-12-05", "end": "2026-12-07", "limit": 400, "reg_open": "2026-04-06T18:00:00.000Z", "reg_close": "2026-11-08T22:59:00.000Z", "accepted": 341, "registered": {"2025MORA11": ["222", "333", "333bf", "333oh", "444", "555", "clock", "minx", "pyram", "skewb", "sq1"], "2025PRIE04": ["222", "333", "333oh", "444", "clock", "minx", "pyram", "skewb"]}, "events": [{"id": "333", "n": 331, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 103, "both": 103}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 253, "both": 254}}}, {"id": "222", "n": 303, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 111, "both": 111}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 222, "both": 223}}}, {"id": "444", "n": 254, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 145, "both": 145}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 237, "both": 238}}}, {"id": "555", "n": 160, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 112, "both": 112}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "666", "n": 112, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "777", "n": 95, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 90, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 82, "both": 82}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333oh", "n": 224, "p": {"2025MORA11": {"avg": 2374, "single": 1997, "has": true, "solo": 98, "both": 98}, "2025PRIE04": {"avg": 5217, "single": 4135, "has": true, "solo": 193, "both": 194}}}, {"id": "clock", "n": 138, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 13, "both": 13}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 28, "both": 29}}}, {"id": "minx", "n": 160, "p": {"2025MORA11": {"avg": 5586, "single": 4826, "has": true, "solo": 33, "both": 33}, "2025PRIE04": {"avg": null, "single": 18636, "has": true, "solo": 156, "both": 157}}}, {"id": "pyram", "n": 255, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 99, "both": 100}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 82, "both": 82}}}, {"id": "skewb", "n": 236, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 96, "both": 97}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 88, "both": 88}}}, {"id": "sq1", "n": 124, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 86, "both": 86}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "444bf", "n": 20, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "555bf", "n": 20, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333mbf", "n": 20, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "MiniBlindCanelas2026", "name": "Mini Blind Canelas 2026", "city": "Canelas, Porto", "country": "PT", "start": "2026-12-06", "end": "2026-12-06", "limit": 20, "reg_open": "2026-11-08T19:00:00.000Z", "reg_close": "2026-11-22T19:00:00.000Z", "accepted": 7, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333bf", "n": 7, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "444bf", "n": 5, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "555bf", "n": 4, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "SFRAASideOpen2026", "name": "SFRAA Side Open 2026", "city": "Falagueira-Venda Nova, Amadora", "country": "PT", "start": "2026-12-06", "end": "2026-12-06", "limit": 30, "reg_open": "2026-11-01T19:00:00.000Z", "reg_close": "2026-11-22T21:00:00.000Z", "accepted": 8, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "555", "n": 6, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 4, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 4, "both": 4}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 8, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 1, "both": 2}}}, {"id": "sq1", "n": 5, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 5, "both": 5}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "MadridChessOpen2026", "name": "Move & Clock Madrid Chess Open 2026", "city": "Madrid", "country": "ES", "start": "2026-12-19", "end": "2026-12-19", "limit": 30, "reg_open": "2026-11-16T20:30:00.000Z", "reg_close": "2026-12-12T23:59:00.000Z", "accepted": 30, "registered": {"2025MORA11": ["333bf", "clock", "minx"], "2025PRIE04": ["clock", "minx"]}, "events": [{"id": "333bf", "n": 19, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 17, "both": 17}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 27, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 9, "both": 10}}}, {"id": "minx", "n": 21, "p": {"2025MORA11": {"avg": 5586, "single": 4826, "has": true, "solo": 5, "both": 5}, "2025PRIE04": {"avg": null, "single": 18636, "has": true, "solo": 19, "both": 20}}}, {"id": "444bf", "n": 11, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "CanamaresOpen2027", "name": "Cañamares Open 2027", "city": "Cañamares", "country": "ES", "start": "2027-01-02", "end": "2027-01-03", "limit": 50, "reg_open": "2026-11-17T16:00:00.000Z", "reg_close": "2026-12-19T22:59:00.000Z", "accepted": 7, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 7, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 5, "both": 5}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 7, "both": 8}}}, {"id": "222", "n": 6, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 5, "both": 5}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 6, "both": 7}}}, {"id": "444", "n": 5, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 6, "both": 6}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 6, "both": 7}}}, {"id": "clock", "n": 6, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 1, "both": 2}}}, {"id": "pyram", "n": 6, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 4, "both": 5}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 3, "both": 3}}}, {"id": "skewb", "n": 6, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 5, "both": 6}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 5, "both": 5}}}, {"id": "fto", "n": 6, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "OdivelasFTORumble2027", "name": "Odivelas FTO Rumble 2027", "city": "Odivelas", "country": "PT", "start": "2027-01-02", "end": "2027-01-02", "limit": 30, "reg_open": "2026-10-18T19:00:00.000Z", "reg_close": "2026-12-20T23:00:00.000Z", "accepted": 30, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "555", "n": 22, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 10, "both": 10}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 26, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 2, "both": 3}}}, {"id": "minx", "n": 23, "p": {"2025MORA11": {"avg": 5586, "single": 4826, "has": true, "solo": 4, "both": 4}, "2025PRIE04": {"avg": null, "single": 18636, "has": true, "solo": 21, "both": 22}}}, {"id": "fto", "n": 23, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "LugoOpen2027", "name": "Lugo Open 2027", "city": "Lugo", "country": "ES", "start": "2027-01-03", "end": "2027-01-03", "limit": 60, "reg_open": "2026-11-19T20:00:00.000Z", "reg_close": "2026-12-19T21:00:00.000Z", "accepted": 29, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 28, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 5, "both": 5}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 24, "both": 25}}}, {"id": "222", "n": 27, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 7, "both": 7}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 21, "both": 22}}}, {"id": "444", "n": 22, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 10, "both": 10}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 19, "both": 20}}}, {"id": "333bf", "n": 10, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 7, "both": 7}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 17, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 3, "both": 3}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 4, "both": 5}}}, {"id": "pyram", "n": 22, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 8, "both": 9}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 6, "both": 6}}}, {"id": "skewb", "n": 23, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 7, "both": 8}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 6, "both": 6}}}, {"id": "fto", "n": 13, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "ElVellonOpen2027", "name": "El Vellón Open 2027", "city": "El Vellón, Madrid", "country": "ES", "start": "2027-01-16", "end": "2027-01-16", "limit": 30, "reg_open": "2026-12-01T20:00:00.000Z", "reg_close": "2027-01-09T17:00:00.000Z", "accepted": 0, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "555", "n": 0, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 0, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333fm", "n": 0, "p": {"2025MORA11": {"avg": 4700, "single": 42, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "clock", "n": 0, "p": {"2025MORA11": {"avg": 419, "single": 314, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 566, "single": 485, "has": true, "solo": 1, "both": 2}}}, {"id": "sq1", "n": 0, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "444bf", "n": 0, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "555bf", "n": 0, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "fto", "n": 0, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "VilladeCatralReOpen2027", "name": "Villa de Catral ReOpen 2027", "city": "Villa de Catral, Alicante", "country": "ES", "start": "2027-01-16", "end": "2027-01-17", "limit": 60, "reg_open": "2026-11-27T18:00:00.000Z", "reg_close": "2027-01-08T22:59:00.000Z", "accepted": 0, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 0, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 1, "both": 2}}}, {"id": "222", "n": 0, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 1, "both": 2}}}, {"id": "444", "n": 0, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 1, "both": 2}}}, {"id": "333bf", "n": 0, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333oh", "n": 0, "p": {"2025MORA11": {"avg": 2374, "single": 1997, "has": true, "solo": 1, "both": 1}, "2025PRIE04": {"avg": 5217, "single": 4135, "has": true, "solo": 1, "both": 2}}}, {"id": "pyram", "n": 0, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 1, "both": 2}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 1, "both": 1}}}, {"id": "skewb", "n": 0, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 1, "both": 2}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 1, "both": 1}}}, {"id": "fto", "n": 0, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}, {"id": "EcijaOpen2027", "name": "Écija Open 2027", "city": "Écija, Sevilla", "country": "ES", "start": "2027-01-30", "end": "2027-01-31", "limit": 80, "reg_open": "2026-10-26T17:00:00.000Z", "reg_close": "2027-01-22T22:59:00.000Z", "accepted": 20, "registered": {"2025MORA11": null, "2025PRIE04": null}, "events": [{"id": "333", "n": 20, "p": {"2025MORA11": {"avg": 1053, "single": 765, "has": true, "solo": 8, "both": 8}, "2025PRIE04": {"avg": 2555, "single": 1947, "has": true, "solo": 17, "both": 18}}}, {"id": "222", "n": 18, "p": {"2025MORA11": {"avg": 344, "single": 208, "has": true, "solo": 8, "both": 8}, "2025PRIE04": {"avg": 618, "single": 349, "has": true, "solo": 14, "both": 15}}}, {"id": "444", "n": 14, "p": {"2025MORA11": {"avg": 5483, "single": 4383, "has": true, "solo": 11, "both": 11}, "2025PRIE04": {"avg": null, "single": 10135, "has": true, "solo": 15, "both": 16}}}, {"id": "555", "n": 12, "p": {"2025MORA11": {"avg": 10358, "single": 9468, "has": true, "solo": 9, "both": 9}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "333bf", "n": 7, "p": {"2025MORA11": {"avg": null, "single": 25589, "has": true, "solo": 7, "both": 7}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "pyram", "n": 14, "p": {"2025MORA11": {"avg": 631, "single": 387, "has": true, "solo": 8, "both": 9}, "2025PRIE04": {"avg": 559, "single": 270, "has": true, "solo": 6, "both": 6}}}, {"id": "skewb", "n": 12, "p": {"2025MORA11": {"avg": 605, "single": 231, "has": true, "solo": 9, "both": 10}, "2025PRIE04": {"avg": 566, "single": 323, "has": true, "solo": 9, "both": 9}}}, {"id": "sq1", "n": 9, "p": {"2025MORA11": {"avg": 2894, "single": 2043, "has": true, "solo": 9, "both": 9}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}, {"id": "fto", "n": 12, "p": {"2025MORA11": {"avg": null, "single": null, "has": false, "solo": null, "both": null}, "2025PRIE04": {"avg": null, "single": null, "has": false, "solo": null, "both": null}}}]}]};
+const EV = {"333":"3x3","222":"2x2","444":"4x4","555":"5x5","666":"6x6","777":"7x7","333bf":"3x3 a ciegas","333fm":"Menos movimientos","333oh":"3x3 a una mano","clock":"Clock","minx":"Megaminx","pyram":"Pyraminx","skewb":"Skewb","sq1":"Square-1","444bf":"4x4 a ciegas","555bf":"5x5 a ciegas","333mbf":"Multi-ciegas","fto":"FTO"};
+const SINGLE = new Set(["333bf","444bf","555bf","333mbf"]);
+const IDS = Object.keys(DATA.people);
+const CLS = {[IDS[0]]:"a",[IDS[1]]:"m"};
+const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+let st = {country:"all", mode:"solo", only:true};
+
+function fmtTime(v, ev, type){
+  if (v==null) return null;
+  if (ev==="333fm") return type==="average" ? (v/100).toFixed(2) : String(v);
+  if (ev==="333mbf") return String(v);
+  const cs=v%100, s=Math.floor(v/100), m=Math.floor(s/60), ss=s%60;
+  return m>0 ? `${m}:${String(ss).padStart(2,"0")}.${String(cs).padStart(2,"0")}` : `${ss}.${String(cs).padStart(2,"0")}`;
+}
+function fmtDate(a,b){
+  const d1=new Date(a+"T12:00"), d2=new Date(b+"T12:00");
+  const f=d=>`${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return a===b ? `${f(d1)} ${d1.getFullYear()}` : `${f(d1)} – ${f(d2)} ${d2.getFullYear()}`;
+}
+function medal(r){ return r===1?'<span class="medal g"></span>':r===2?'<span class="medal s"></span>':r===3?'<span class="medal b"></span>':''; }
+function otherIn(comp, ev, pid){
+  const o = IDS.find(x=>x!==pid);
+  return st.mode==="both" || !!(comp.registered[o] && comp.registered[o].includes(ev.id));
+}
+function rankOf(comp, ev, pid){ return otherIn(comp,ev,pid) ? ev.p[pid].both : ev.p[pid].solo; }
+function total(comp, ev, pid){ return ev.n + 1 + (otherIn(comp,ev,pid) ? 1 : 0); }
+function cell(comp, ev, pid){
+  const p = ev.p[pid];
+  if (!p.has) return `<span class="none">Sin resultado oficial</span>`;
+  const r = rankOf(comp, ev, pid);
+  const main = SINGLE.has(ev.id) ? fmtTime(p.single, ev.id, "single") : fmtTime(p.avg, ev.id, "average");
+  const pbTxt = SINGLE.has(ev.id) ? `single ${main}` : (main ? `media ${main}` : `sin media · single ${fmtTime(p.single, ev.id, "single")}`);
+  const reg = comp.registered[pid];
+  const regEv = reg && reg.includes(ev.id);
+  return `<div class="cell"><span class="rank">${medal(r)}${r}º <small>/ ${total(comp,ev,pid)}</small></span><span class="pb">${pbTxt}</span>${regEv?'<span class="regmark">INSCRITO</span>':''}</div>`;
+}
+
+function render(){
+  const who = document.getElementById("who");
+  who.innerHTML = IDS.map(id=>`<span class="chip ${CLS[id]}">${DATA.people[id].name} <a href="https://www.worldcubeassociation.org/persons/${id}" target="_blank" rel="noopener">${id}</a></span>`).join("");
+
+  const comps = DATA.comps.filter(c => st.country==="all" || c.country===st.country);
+  // summary
+  const sum = {};
+  IDS.forEach(id => sum[id] = {pod:0, wins:0, best:null});
+  comps.filter(c=>c.accepted>0).forEach(c => c.events.forEach(ev => IDS.forEach(id => {
+    const p = ev.p[id]; if (!p.has) return;
+    const r = rankOf(c, ev, id);
+    if (r<=3) sum[id].pod++;
+    if (r===1) sum[id].wins++;
+    const pct = r / total(c,ev,id);
+    if (!sum[id].best || pct < sum[id].best.pct) sum[id].best = {pct, r, tot: total(c,ev,id), ev: EV[ev.id]||ev.id, comp: c.name};
+  })));
+  document.getElementById("summary").innerHTML = IDS.map(id => {
+    const s = sum[id];
+    return `<div class="stat"><h3 style="color:var(--${CLS[id]})">${DATA.people[id].name}</h3>
+      <div class="big">${s.pod} <span style="font-size:14px;font-weight:500">puestos de podio</span></div>
+      <div class="small">${s.wins} veces 1º · en ${comps.filter(c=>c.accepted>0).length} competiciones con inscritos</div>
+      ${s.best?`<div class="small" style="margin-top:6px">Mejor puesto relativo: <b>${s.best.r}º de ${s.best.tot}</b> en ${s.best.ev}, ${s.best.comp}</div>`:""}</div>`;
+  }).join("");
+
+  // list
+  document.getElementById("list").innerHTML = comps.map(c => {
+    let evs = c.events;
+    if (st.only) evs = evs.filter(ev => IDS.some(id => ev.p[id].has));
+    const tags = [];
+    tags.push(`<span class="tag">${c.country==="ES"?"España":"Portugal"}</span>`);
+    tags.push(`<span class="tag">${c.accepted}${c.limit?` / ${c.limit}`:""} inscritos</span>`);
+    const now = new Date(DATA.generated+"T23:00:00Z"), ro = new Date(c.reg_open), rc = new Date(c.reg_close);
+    const dm = d => `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+    tags.push(now < ro ? `<span class="tag">Inscripción abre el ${dm(ro)}</span>` : now > rc ? `<span class="tag">Inscripción cerrada</span>` : `<span class="tag">Inscripción abierta hasta el ${dm(rc)}</span>`);
+    IDS.forEach(id => { if (c.registered[id]) tags.push(`<span class="tag reg">${DATA.people[id].name.split(" ")[0]} inscrito</span>`); });
+    const rows = evs.map(ev => `<tr><td><b>${EV[ev.id]||ev.id}</b>${SINGLE.has(ev.id)?' <span class="none">(por single)</span>':''}</td>
+      <td class="n">${ev.n}</td>${IDS.map(id=>`<td>${cell(c,ev,id)}</td>`).join("")}</tr>`).join("");
+    return `<section class="comp"><div class="ch"><div>
+        <h2><a href="https://www.worldcubeassociation.org/competitions/${c.id}" target="_blank" rel="noopener">${c.name}</a></h2>
+        <div class="meta">${fmtDate(c.start,c.end)} · ${c.city}</div></div>
+        <div class="tags">${tags.join("")}</div></div>
+      ${c.accepted===0 ? `<div class="empty">Aún no hay inscritos aceptados, así que no hay puesto que calcular. Pruebas: ${c.events.map(e=>EV[e.id]||e.id).join(', ')}.</div>` : evs.length ? `<table><thead><tr><th>Prueba</th><th>Ya inscritos</th>${IDS.map(id=>`<th class="${CLS[id]}">${DATA.people[id].name}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`
+        : `<div class="empty">Ninguno de los dos tiene resultados oficiales en las pruebas de esta competición.</div>`}
+    </section>`;
+  }).join("");
+
+  document.getElementById("foot").innerHTML =
+    `Datos de la API pública de la WCA a fecha ${DATA.generated.split("-").reverse().join("/")}: competiciones con fecha a partir de hoy y solo inscritos aceptados. ` +
+    `El puesto se calcula como en la psych sheet de la WCA: por mejor media y, a igualdad o sin media, por single (las pruebas a ciegas, solo por single). ` +
+    `«Ya inscritos» no cuenta a Alex ni a Marcos. «Cada uno por separado» da el puesto si solo se inscribe esa persona; «Los dos inscritos» lo da si van los dos. Donde ya están inscritos los dos en una prueba (Campeonato de España), se cuenta siempre a ambos. ` +
+    `Quien no tiene resultado oficial en una prueba no recibe puesto en la psych sheet.`;
+}
+
+function bindSeg(id, key){
+  document.getElementById(id).addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    [...e.currentTarget.children].forEach(x => x.classList.toggle("on", x===b));
+    st[key] = b.dataset.v; render();
+  });
+}
+bindSeg("fCountry","country"); bindSeg("fMode","mode");
+document.getElementById("fOnly").addEventListener("change", e => { st.only = e.target.checked; render(); });
+render();
+</script>
+</body>
+</html>
