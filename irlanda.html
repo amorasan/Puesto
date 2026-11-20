@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Puesto: psych sheet de Alex en Irlanda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9;--card:#fff;--ink:#16181d;--muted:#667085;--line:#e4e7ec;
+  --a:#2563eb;--a-soft:#e8efff;--m:#c2410c;--m-soft:#fdeee5;
+  --gold:#d4a017;--silver:#9aa3ad;--bronze:#b8733a;--ok:#15803d;--ok-soft:#e7f6ec;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1115;--card:#171a20;--ink:#eceef2;--muted:#98a2b3;--line:#262b33;
+  --a:#7aa2ff;--a-soft:#1b2540;--m:#fb923c;--m-soft:#3a2214;--ok:#4ade80;--ok-soft:#14301f;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 20px}
+.who{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.chip.a{background:var(--a-soft);color:var(--a)} .chip.m{background:var(--m-soft);color:var(--m)}
+.chip a{color:inherit;font-weight:500;opacity:.8}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:22px;position:sticky;top:0;z-index:5}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.controls label{display:inline-flex;gap:6px;align-items:center;font-size:13px;cursor:pointer}
+.lbl{font-size:12px;color:var(--muted);margin-right:4px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat h3{margin:0 0 8px;font-size:13px}
+.stat .big{font-size:24px;font-weight:700}
+.stat .small{color:var(--muted);font-size:12px}
+.comp{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden}
+.ch{padding:14px 16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.ch h2{margin:0;font-size:17px}
+.ch h2 a{color:inherit;text-decoration:none} .ch h2 a:hover{text-decoration:underline}
+.meta{color:var(--muted);font-size:12.5px;margin-top:3px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start}
+.tag{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.tag.reg{background:var(--ok-soft);color:var(--ok)}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+th.a{color:var(--a)} th.m{color:var(--m)}
+td.n{color:var(--muted);font-variant-numeric:tabular-nums}
+.cell{display:flex;align-items:baseline;gap:10px}
+.rank{font:600 15px/1 Inter;min-width:62px;font-variant-numeric:tabular-nums}
+.rank small{color:var(--muted);font-weight:500;font-size:12px}
+.pb{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.none{color:var(--muted);font-size:12.5px}
+.medal{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.g{background:var(--gold)}.s{background:var(--silver)}.b{background:var(--bronze)}
+.notreg{opacity:.45}
+.regmark{font-size:10.5px;font-weight:700;color:var(--ok);margin-left:6px}
+.foot{color:var(--muted);font-size:12px;margin-top:28px;line-height:1.6}
+.empty{padding:14px 16px;color:var(--muted)}
+@media (max-width:640px){th,td{padding:7px 8px}.pb{display:none}.rank{min-width:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>¿En qué puesto quedaría?</h1>
+  <p class="sub">Puestos en la psych sheet de cada competición WCA próxima de Irlanda, calculados con sus récords personales.</p>
+  <div class="who" id="who"></div>
+  <form id="idForm" class="controls" style="position:static;margin-bottom:12px">
+    <span class="lbl">WCA ID</span>
+    <input id="idA" maxlength="10" style="font:inherit;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:120px">
+    <button type="submit" style="font:inherit;font-size:13px;padding:6px 14px;border-radius:8px;border:0;background:var(--ink);color:var(--bg);cursor:pointer">Calcular</button>
+    <span id="status" class="lbl" style="margin-left:6px"></span>
+  </form>
+
+  <div class="controls">
+    <label><input type="checkbox" id="fOnly" checked> Solo pruebas con resultado</label>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="list"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+
+const EV = {"333":"3x3","222":"2x2","444":"4x4","555":"5x5","666":"6x6","777":"7x7","333bf":"3x3 a ciegas","333fm":"Menos movimientos","333oh":"3x3 a una mano","clock":"Clock","minx":"Megaminx","pyram":"Pyraminx","skewb":"Skewb","sq1":"Square-1","444bf":"4x4 a ciegas","555bf":"5x5 a ciegas","333mbf":"Multi-ciegas","fto":"FTO"};
+const SINGLE = new Set(["333bf","444bf","555bf","333mbf"]);
+const API = "https://www.worldcubeassociation.org/api/v0";
+const SINGLE_EV = new Set(["333bf","444bf","555bf","333mbf"]);
+let DATA = null, IDS = [], CLS = {};
+function setStatus(s){ document.getElementById("status").textContent = s; }
+async function getJSON(u){ const r = await fetch(API+u); if(!r.ok) throw new Error(r.status+" "+u); return r.json(); }
+async function pool(items, n, fn){ const out=[]; let i=0, done=0;
+  await Promise.all(Array.from({length:n}, async()=>{ while(i<items.length){ const k=i++; out[k]=await fn(items[k]); setStatus(`Cargando competiciones… ${++done}/${items.length}`);} }));
+  return out; }
+function keyOf(ev,a,s){ return SINGLE_EV.has(ev) ? [s==null?1:0, s||0] : [a==null?1:0, a||0, s==null?1:0, s||0]; }
+function lt(x,y){ for(let i=0;i<x.length;i++){ if(x[i]!==y[i]) return x[i]<y[i]; } return false; }
+async function load(ids){
+  setStatus("Cargando perfiles…");
+  const people = {};
+  for (const id of ids){
+    const x = await getJSON(`/persons/${id}`);
+    const pr = {};
+    for (const [e,r] of Object.entries(x.personal_records||{})) pr[e] = {single: r.single?r.single.best:null, average: r.average?r.average.best:null};
+    people[id] = {name: x.person.name, pr};
+  }
+  const today = new Date().toISOString().slice(0,10);
+  setStatus("Buscando competiciones…");
+  let metas = [];
+  for (const c of ["IE"]){
+    const L = await getJSON(`/competitions?country_iso2=${c}&start=${today}&per_page=200`);
+    L.filter(m=>!m.cancelled_at).forEach(m => metas.push({...m, _c:c}));
+  }
+  const wcifs = await pool(metas, 4, m => getJSON(`/competitions/${m.id}/wcif/public`).catch(()=>null));
+  const comps = [];
+  metas.forEach((meta, i) => {
+    const w = wcifs[i]; if (!w) return;
+    const acc = w.persons.filter(p => p.registration && p.registration.status==="accepted");
+    const registered = {};
+    ids.forEach(id => { const p = acc.find(q=>q.wcaId===id); registered[id] = p ? p.registration.eventIds : null; });
+    const events = w.events.map(e => e.id).map(ev => {
+      const others = acc.filter(p => p.registration.eventIds.includes(ev) && !ids.includes(p.wcaId)).map(p => {
+        const pb = {}; (p.personalBests||[]).filter(b=>b.eventId===ev).forEach(b=>pb[b.type]=b.best);
+        return keyOf(ev, pb.average??null, pb.single??null);
+      });
+      const row = {id:ev, n:others.length, p:{}}, ks = {};
+      ids.forEach(id => {
+        const r = people[id].pr[ev] || {}; const a = r.average??null, s = r.single??null;
+        const k = keyOf(ev,a,s); ks[id]=k;
+        const has = SINGLE_EV.has(ev) ? s!=null : (a!=null || s!=null);
+        row.p[id] = {avg:a, single:s, has, solo: has ? others.filter(o=>lt(o,k)).length+1 : null};
+      });
+      ids.forEach(id => { const o = ids.find(x=>x!==id);
+        row.p[id].both = row.p[id].has ? row.p[id].solo + ((o && row.p[o].has && lt(ks[o],ks[id]))?1:0) : null; });
+      return row;
+    });
+    comps.push({id:meta.id, name:meta.name, city:meta.city, country:meta._c, start:meta.start_date, end:meta.end_date,
+      limit:meta.competitor_limit, reg_open:meta.registration_open, reg_close:meta.registration_close,
+      accepted:acc.length, registered, events});
+  });
+  comps.sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0);
+  const now = new Date();
+  DATA = {generated: now.toISOString().slice(0,10), genTime: now.toLocaleString("es-ES"), people:Object.fromEntries(ids.map(id=>[id,{name:people[id].name}])), comps};
+  IDS = ids; CLS = {[ids[0]]:"a", [ids[1]]:"m"};
+  setStatus(`Actualizado: ${DATA.genTime}`);
+  render();
+}
+function start(){
+  const q = new URLSearchParams(location.search);
+  const ids = (q.get("ids") || "2025MORA11").toUpperCase().split(",").map(s=>s.trim()).filter(Boolean).slice(0,1);
+  document.getElementById("idA").value = ids[0]||"";
+  load(ids).catch(e => { setStatus("Error cargando datos de la WCA: "+e.message); });
+}
+document.getElementById("idForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const ids = [idA.value].map(s=>s.trim().toUpperCase()).filter(Boolean);
+  if (!ids.length) return;
+  history.replaceState(null, "", "?ids="+ids.join(","));
+  document.getElementById("list").innerHTML = ""; document.getElementById("summary").innerHTML = "";
+  load(ids).catch(err => setStatus("Error: "+err.message+" (¿WCA ID correcto?)"));
+});
+
+const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+let st = {country:"all", mode:"solo", only:true};
+
+function fmtTime(v, ev, type){
+  if (v==null) return null;
+  if (ev==="333fm") return type==="average" ? (v/100).toFixed(2) : String(v);
+  if (ev==="333mbf") return String(v);
+  const cs=v%100, s=Math.floor(v/100), m=Math.floor(s/60), ss=s%60;
+  return m>0 ? `${m}:${String(ss).padStart(2,"0")}.${String(cs).padStart(2,"0")}` : `${ss}.${String(cs).padStart(2,"0")}`;
+}
+function fmtDate(a,b){
+  const d1=new Date(a+"T12:00"), d2=new Date(b+"T12:00");
+  const f=d=>`${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return a===b ? `${f(d1)} ${d1.getFullYear()}` : `${f(d1)} – ${f(d2)} ${d2.getFullYear()}`;
+}
+function medal(r){ return r===1?'<span class="medal g"></span>':r===2?'<span class="medal s"></span>':r===3?'<span class="medal b"></span>':''; }
+function otherIn(comp, ev, pid){
+  const o = IDS.find(x=>x!==pid);
+  if (!o) return false;
+  return st.mode==="both" || !!(comp.registered[o] && comp.registered[o].includes(ev.id));
+}
+function rankOf(comp, ev, pid){ return otherIn(comp,ev,pid) ? ev.p[pid].both : ev.p[pid].solo; }
+function total(comp, ev, pid){ return ev.n + 1 + (otherIn(comp,ev,pid) ? 1 : 0); }
+function cell(comp, ev, pid){
+  const p = ev.p[pid];
+  if (!p.has) return `<span class="none">Sin resultado oficial</span>`;
+  const r = rankOf(comp, ev, pid);
+  const main = SINGLE.has(ev.id) ? fmtTime(p.single, ev.id, "single") : fmtTime(p.avg, ev.id, "average");
+  const pbTxt = SINGLE.has(ev.id) ? `single ${main}` : (main ? `media ${main}` : `sin media · single ${fmtTime(p.single, ev.id, "single")}`);
+  const reg = comp.registered[pid];
+  const regEv = reg && reg.includes(ev.id);
+  return `<div class="cell"><span class="rank">${medal(r)}${r}º <small>/ ${total(comp,ev,pid)}</small></span><span class="pb">${pbTxt}</span>${regEv?'<span class="regmark">INSCRITO</span>':''}</div>`;
+}
+
+function render(){
+  const who = document.getElementById("who");
+  who.innerHTML = IDS.map(id=>`<span class="chip ${CLS[id]}">${DATA.people[id].name} <a href="https://www.worldcubeassociation.org/persons/${id}" target="_blank" rel="noopener">${id}</a></span>`).join("");
+
+  const comps = DATA.comps.filter(c => st.country==="all" || c.country===st.country);
+  // summary
+  const sum = {};
+  IDS.forEach(id => sum[id] = {pod:0, wins:0, best:null});
+  comps.filter(c=>c.accepted>0).forEach(c => c.events.forEach(ev => IDS.forEach(id => {
+    const p = ev.p[id]; if (!p.has) return;
+    const r = rankOf(c, ev, id);
+    if (r<=3) sum[id].pod++;
+    if (r===1) sum[id].wins++;
+    const pct = r / total(c,ev,id);
+    if (!sum[id].best || pct < sum[id].best.pct) sum[id].best = {pct, r, tot: total(c,ev,id), ev: EV[ev.id]||ev.id, comp: c.name};
+  })));
+  document.getElementById("summary").innerHTML = IDS.map(id => {
+    const s = sum[id];
+    return `<div class="stat"><h3 style="color:var(--${CLS[id]})">${DATA.people[id].name}</h3>
+      <div class="big">${s.pod} <span style="font-size:14px;font-weight:500">${s.pod===1?"puesto":"puestos"} de podio</span></div>
+      <div class="small">${s.wins} ${s.wins===1?"vez":"veces"} 1º · en ${comps.filter(c=>c.accepted>0).length} competiciones con inscritos</div>
+      ${s.best?`<div class="small" style="margin-top:6px">Mejor puesto relativo: <b>${s.best.r}º de ${s.best.tot}</b> en ${s.best.ev}, ${s.best.comp}</div>`:""}</div>`;
+  }).join("");
+
+  // list
+  document.getElementById("list").innerHTML = comps.map(c => {
+    let evs = c.events;
+    if (st.only) evs = evs.filter(ev => IDS.some(id => ev.p[id].has));
+    const tags = [];
+    tags.push(`<span class="tag">Irlanda</span>`);
+    tags.push(`<span class="tag">${c.accepted}${c.limit?` / ${c.limit}`:""} inscritos</span>`);
+    const now = new Date(), ro = new Date(c.reg_open), rc = new Date(c.reg_close);
+    const dm = d => `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+    tags.push(now < ro ? `<span class="tag">Inscripción abre el ${dm(ro)}</span>` : now > rc ? `<span class="tag">Inscripción cerrada</span>` : `<span class="tag">Inscripción abierta hasta el ${dm(rc)}</span>`);
+    IDS.forEach(id => { if (c.registered[id]) tags.push(`<span class="tag reg">${DATA.people[id].name.split(" ")[0]} inscrito</span>`); });
+    const rows = evs.map(ev => `<tr><td><b>${EV[ev.id]||ev.id}</b>${SINGLE.has(ev.id)?' <span class="none">(por single)</span>':''}</td>
+      <td class="n">${ev.n}</td>${IDS.map(id=>`<td>${cell(c,ev,id)}</td>`).join("")}</tr>`).join("");
+    return `<section class="comp"><div class="ch"><div>
+        <h2><a href="https://www.worldcubeassociation.org/competitions/${c.id}" target="_blank" rel="noopener">${c.name}</a></h2>
+        <div class="meta">${fmtDate(c.start,c.end)} · ${c.city}</div></div>
+        <div class="tags">${tags.join("")}</div></div>
+      ${c.accepted===0 ? `<div class="empty">Aún no hay inscritos aceptados, así que no hay puesto que calcular. Pruebas: ${c.events.map(e=>EV[e.id]||e.id).join(', ')}.</div>` : evs.length ? `<table><thead><tr><th>Prueba</th><th>Ya inscritos</th>${IDS.map(id=>`<th class="${CLS[id]}">${DATA.people[id].name}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`
+        : `<div class="empty">No tiene resultados oficiales en ninguna prueba de esta competición.</div>`}
+    </section>`;
+  }).join("");
+
+  document.getElementById("foot").innerHTML =
+    `Datos en directo de la API pública de la WCA (cargados el ${DATA.genTime}): competiciones con fecha a partir de hoy y solo inscritos aceptados. ` +
+    `El puesto se calcula como en la psych sheet de la WCA: por mejor media y, a igualdad o sin media, por single (las pruebas a ciegas, solo por single). ` +
+    `«Ya inscritos» no cuenta a la persona elegida; el puesto es el que tendría si se inscribiera. ` +
+    `Quien no tiene resultado oficial en una prueba no recibe puesto en la psych sheet.`;
+}
+
+function bindSeg(id, key){
+  document.getElementById(id).addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    [...e.currentTarget.children].forEach(x => x.classList.toggle("on", x===b));
+    st[key] = b.dataset.v; if (DATA) render();
+  });
+}
+
+document.getElementById("fOnly").addEventListener("change", e => { st.only = e.target.checked; if(DATA) render(); });
+start();
+</script>
+</body>
+</html>
